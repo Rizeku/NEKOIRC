@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NEKOIRC</title>
   <link rel="icon" type="image/png" href="https://nekosec.netlify.app/images/neko.png">
   <style>
@@ -28,7 +28,9 @@
       font-family: 'Consolas', 'Courier New', monospace;
       font-size: 14px;
       display: flex; flex-direction: column;
-      height: 100vh; overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
       user-select: none;
       position: relative;
     }
@@ -64,6 +66,7 @@
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
+      z-index: 20;
     }
     .logo {
       display: flex; align-items: center; gap: 10px;
@@ -106,12 +109,15 @@
     }
     .icon-btn:hover { border-color: var(--neko-accent-dim); color: var(--neko-accent); box-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
     .icon-btn.muted { color: var(--neko-red); border-color: var(--neko-red); }
-    .main { flex: 1; display: flex; overflow: hidden; }
+    .mobile-only { display: none; }
+    .main { flex: 1; display: flex; overflow: hidden; position: relative; }
     #sidebar {
       width: 200px; flex-shrink: 0;
       background: var(--neko-panel);
       border-right: 1px solid var(--neko-border);
       display: flex; flex-direction: column; overflow: hidden;
+      transition: transform 0.3s ease;
+      z-index: 15;
     }
     .sidebar-section h3 {
       font-size: 0.72em; text-transform: uppercase; letter-spacing: 1px;
@@ -150,7 +156,7 @@
     }
     .conv .type-icon { font-size: 0.8em; opacity: 0.6; margin-right: 4px; }
     .conv .muted-icon { opacity: 0.4; font-size: 0.75em; }
-    #log { flex: 1; overflow-y: auto; padding: 10px 16px; line-height: 1.5; user-select: text; }
+    #log { flex: 1; overflow-y: auto; padding: 10px 16px; line-height: 1.5; user-select: text; overflow-wrap: break-word; word-wrap: break-word; }
     .msg { margin: 1px 0; word-wrap: break-word; padding: 2px 4px; border-radius: 2px; animation: msgIn 0.25s ease-out; }
     @keyframes msgIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
     .msg .time { color: #3a4a6a; font-size: 0.8em; margin-right: 6px; }
@@ -184,6 +190,8 @@
       background: var(--neko-panel);
       border-left: 1px solid var(--neko-border);
       display: flex; flex-direction: column;
+      transition: transform 0.3s ease;
+      z-index: 15;
     }
     #users-panel h3 {
       font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px;
@@ -203,6 +211,7 @@
       background: var(--neko-panel);
       border-top: 1px solid var(--neko-border);
       flex-shrink: 0;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     }
     #input {
       flex: 1; background: #000; border: 1px solid var(--neko-border);
@@ -236,18 +245,19 @@
     ::-webkit-scrollbar-track { background: var(--neko-bg); }
     ::-webkit-scrollbar-thumb { background: var(--neko-border); border-radius: 4px; transition: background 0.2s; }
     ::-webkit-scrollbar-thumb:hover { background: var(--neko-accent-dim); }
-    #modal {
+    #modal, #login-modal {
       position: fixed; inset: 0; background: rgba(0,0,0,0.85);
       display: none; align-items: center; justify-content: center;
       z-index: 100; backdrop-filter: blur(2px);
     }
-    #modal.show { display: flex; animation: fadeIn 0.2s ease-out; }
+    #modal.show, #login-modal.show { display: flex; animation: fadeIn 0.2s ease-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal-box {
       background: var(--neko-panel); border: 1px solid var(--neko-accent-dim);
-      padding: 24px; border-radius: 4px; min-width: 360px; max-width: 480px;
+      padding: 24px; border-radius: 4px; width: 100%; max-width: 400px;
       box-shadow: 0 0 40px rgba(0,212,255,0.25);
       animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      margin: 16px;
     }
     @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .modal-box h2 { color: var(--neko-accent); margin-bottom: 4px; font-size: 1.2em; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
@@ -315,17 +325,44 @@
     #context-menu .ctx-item.danger:hover { background: rgba(255,74,106,0.15); color: #fff; }
     #context-menu .ctx-item .icon { width: 14px; text-align: center; opacity: 0.7; }
     #context-menu .ctx-sep { height: 1px; background: var(--neko-border); margin: 4px 8px; }
+
+    @media (max-width: 768px) {
+      .mobile-only { display: flex; align-items: center; justify-content: center; }
+      #sidebar, #users-panel {
+        position: absolute;
+        top: 0; bottom: 0;
+        background: var(--neko-bg);
+        box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        z-index: 50;
+      }
+      #sidebar { left: 0; width: 250px; transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #users-panel { right: 0; width: 200px; transform: translateX(100%); }
+      #users-panel.open { transform: translateX(0); }
+      #status-text { display: none; }
+      .status { padding: 4px 6px; border: none; background: transparent; }
+      .status .dot { width: 10px; height: 10px; }
+      .logo { font-size: 1em; letter-spacing: 1px; }
+      .logo-img { height: 24px; width: 24px; }
+      #input-area { padding: 6px 8px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+      #input { font-size: 16px; }
+      button.send-btn { padding: 8px 12px; }
+      .icon-btn { padding: 4px 6px; }
+      .msg { font-size: 13px; }
+    }
   </style>
 </head>
 <body>
   <header>
+    <button class="mobile-only icon-btn" id="toggle-sidebar" title="Kanály a DM">☰</button>
     <div class="logo">
       <img src="https://nekosec.netlify.app/images/neko.png" alt="NEKOIRC" class="logo-img">
       NEKO<span>IRC</span>
     </div>
     <div class="header-right">
-      <button class="icon-btn" id="sound-toggle" title="Zvuková oznámení">🔊 Zvuk: ON</button>
+      <button class="icon-btn" id="sound-toggle" title="Zvuková oznámení">🔊</button>
       <div class="status" id="status"><span class="dot"></span><span id="status-text">Připojování...</span></div>
+      <button class="mobile-only icon-btn" id="toggle-users" title="Uživatelé">👥</button>
     </div>
   </header>
 
@@ -357,16 +394,13 @@
     <div class="modal-box">
       <h2>NEKOIRC</h2>
       <div class="subtitle">Přihlášení do IRC</div>
-
       <label for="login-nick">Přezdívka</label>
       <input id="login-nick" placeholder="např. NEKOIRC_User" autocomplete="off" spellcheck="false" maxlength="30">
       <div class="hint">Tuto přezdívku budete používat v síti.</div>
-
       <div class="checkbox-row">
         <input type="checkbox" id="login-remember" checked>
         <label for="login-remember" style="margin:0; text-transform:none; letter-spacing:0; font-size:1em; color:var(--neko-text);">Zapamatovat si přezdívku</label>
       </div>
-
       <div class="buttons">
         <button id="login-connect">Připojit</button>
       </div>
@@ -387,7 +421,6 @@
   <div id="context-menu"></div>
 
   <script>
-    // ========== KONFIGURACE ==========
     const CONFIG = {
       defaultChannel: '#nekosec',
       delays: { afterOpen: 300, afterNick: 400, afterUser: 600, afterJoin: 800 }
@@ -419,12 +452,16 @@
     const modalTitle = document.getElementById('modal-title');
     const ctxMenu = document.getElementById('context-menu');
 
+    const sidebar = document.getElementById('sidebar');
+    const usersPanel = document.getElementById('users-panel');
+    const toggleSidebar = document.getElementById('toggle-sidebar');
+    const toggleUsers = document.getElementById('toggle-users');
+
     const loginModal = document.getElementById('login-modal');
     const loginNick = document.getElementById('login-nick');
     const loginRemember = document.getElementById('login-remember');
     const loginConnect = document.getElementById('login-connect');
 
-    // ========== ZVUK ==========
     const soundAudio = new Audio('message.mp3');
     soundAudio.preload = 'auto';
     let audioCtx = null;
@@ -474,11 +511,25 @@
 
     soundToggle.onclick = () => {
       state.soundEnabled = !state.soundEnabled;
-      soundToggle.textContent = state.soundEnabled ? '🔊 Zvuk: ON' : '🔇 Zvuk: OFF';
+      soundToggle.textContent = state.soundEnabled ? '🔊' : '🔇';
       soundToggle.classList.toggle('muted', !state.soundEnabled);
     };
 
-    // ========== POMOCNÉ ==========
+    toggleSidebar.onclick = () => {
+      sidebar.classList.toggle('open');
+      usersPanel.classList.remove('open');
+    };
+
+    toggleUsers.onclick = () => {
+      usersPanel.classList.toggle('open');
+      sidebar.classList.remove('open');
+    };
+
+    logEl.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      usersPanel.classList.remove('open');
+    });
+
     function now() { return new Date().toTimeString().slice(0, 8); }
     function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -502,7 +553,6 @@
       return re.test(text);
     }
 
-    // ========== KONVERZACE ==========
     function convKey(type, name) { return `${type}:${name.toLowerCase()}`; }
 
     function getOrCreateConv(type, name) {
@@ -523,6 +573,8 @@
       renderConversations();
       document.getElementById('users-panel').style.display = type === 'channel' ? '' : 'none';
       inputEl.placeholder = type === 'channel' ? `Zpráva do ${name}...` : `Soukromá zpráva pro ${name}...`;
+      sidebar.classList.remove('open');
+      usersPanel.classList.remove('open');
     }
 
     function renderConversations() {
@@ -574,7 +626,6 @@
       if (scroll) logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // ========== PARSOVÁNÍ IRC ==========
     function parseIrc(line) {
       const msg = { prefix: null, command: null, params: [], trailing: null };
       let rest = line;
@@ -595,7 +646,6 @@
     }
     function nickFromPrefix(prefix) { return prefix ? prefix.split('!')[0] : ''; }
 
-    // ========== IRC HANDLER ==========
     function handleIrcMessage(line) {
       if (line.startsWith('PING')) {
         ws.send('PONG ' + line.slice(5) + '\r\n');
@@ -762,7 +812,6 @@
       }
     }
 
-    // ========== UŽIVATELÉ ==========
     function renderUsers() {
       const sorted = [...state.channelUsers.entries()].sort((a, b) => {
         const pa = a[1].prefix === '@' ? 0 : a[1].prefix === '+' ? 1 : 2;
@@ -807,7 +856,6 @@
       renderConversations();
     }
 
-    // ========== KONTEXTOVÉ MENU ==========
     function hideContextMenu() {
       ctxMenu.classList.remove('show');
       ctxMenu.innerHTML = '';
@@ -925,7 +973,6 @@
       showContextMenu(x, y, nick, items);
     }
 
-    // ========== MODAL ==========
     let modalCallback = null;
     function showModal(title, placeholder, callback) {
       modalTitle.textContent = title;
@@ -954,7 +1001,6 @@
       });
     };
 
-    // ========== PŘIHLÁŠOVACÍ MODAL ==========
     function showLoginModal() {
       loginModal.style.display = 'flex';
       loginNick.focus();
@@ -984,7 +1030,6 @@
     };
     loginNick.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginConnect.click(); });
 
-    // ========== WEBSOCKET ==========
     let ws = null;
     const sendQueue = [];
     let sendTimer = null;
@@ -1009,7 +1054,6 @@
         if (!state.connected) setStatus('', 'Server se probouzí, čekejte...');
       }, 5000);
 
-      // Připojení na stejnou doménu, na které běží web
       const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
       ws = new WebSocket(`${protocol}://${location.host}`);
 
@@ -1055,7 +1099,6 @@
       };
     }
 
-    // ========== ODESÍLÁNÍ ==========
     function sendInput(e) {
       const val = inputEl.value.trim();
       if (!val || !ws || ws.readyState !== WebSocket.OPEN || !state.currentConv) return;
@@ -1163,7 +1206,6 @@
       }
     });
 
-    // ========== START ==========
     getOrCreateConv('channel', CONFIG.defaultChannel);
     state.currentConv = { type: 'channel', name: CONFIG.defaultChannel };
     renderConversations();
