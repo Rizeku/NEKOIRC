@@ -1,17 +1,54 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const { WebSocketServer } = require('ws');
 const tls = require('tls');
 
 const IRC_HOST = 'nekosec.irc-server.org';
 const IRC_PORT = 6697;
 
-// HTTP server – Render vyžaduje, abychom naslouchali na HTTP portu
 const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('NEKOIRC Backend is running');
+  let filePath = req.url === '/' ? '/index.html' : req.url;
+  filePath = filePath.split('?')[0];
+  filePath = path.join(__dirname, 'public', filePath);
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      if (err.code === 'ENOENT' && !path.extname(filePath)) {
+        fs.readFile(path.join(__dirname, 'public', 'index.html'), (err2, data2) => {
+          if (err2) {
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('Not found');
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(data2);
+        });
+        return;
+      }
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('Not found');
+      return;
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    const types = {
+      '.html': 'text/html; charset=utf-8',
+      '.js': 'text/javascript; charset=utf-8',
+      '.css': 'text/css; charset=utf-8',
+      '.mp3': 'audio/mpeg',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.svg': 'image/svg+xml',
+      '.ico': 'image/x-icon',
+      '.json': 'application/json',
+    };
+    res.writeHead(200, { 'Content-Type': types[ext] || 'application/octet-stream' });
+    res.end(data);
+  });
 });
 
-// WebSocket server navázaný na HTTP server
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
@@ -21,15 +58,12 @@ wss.on('connection', (ws) => {
     host: IRC_HOST,
     port: IRC_PORT,
     servername: IRC_HOST,
-    // ⚠️ DOČASNĚ: certifikát serveru vypršel, pro testování přeskočeno ověření
-    // Po obnovení certifikátu správcem serveru změňte zpět na true!
     rejectUnauthorized: false,
     minVersion: 'TLSv1.2',
   }, () => {
     console.log('TLS spojení s IRC navázáno, protokol:', ircSocket.getProtocol());
   });
 
-  // IRC server → prohlížeč
   ircSocket.on('data', (data) => {
     if (ws.readyState === ws.OPEN) {
       ws.send(data.toString('utf8'));
@@ -48,7 +82,6 @@ wss.on('connection', (ws) => {
     if (ws.readyState === ws.OPEN) ws.close();
   });
 
-  // Prohlížeč → IRC server
   ws.on('message', (msg) => {
     if (ircSocket.writable) {
       ircSocket.write(msg.toString());
@@ -61,8 +94,8 @@ wss.on('connection', (ws) => {
   });
 });
 
-// KLÍČOVÉ: Naslouchat na 0.0.0.0 a portu z proměnné prostředí
 const port = process.env.PORT || 3000;
 server.listen(port, '0.0.0.0', () => {
-  console.log(`NEKOIRC backend běží na portu ${port}`);
+  console.log(`NEKOIRC běží na portu ${port}`);
+  console.log(`Otevřete http://localhost:${port} (lokálně) nebo https://nekoirc.onrender.com (produkce)`);
 });
