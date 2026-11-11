@@ -32,8 +32,6 @@
       user-select: none;
       position: relative;
     }
-
-    /* ===== Animované pozadí ===== */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -47,12 +45,8 @@
       z-index: 0;
       animation: bgPulse 8s ease-in-out infinite;
     }
-    @keyframes bgPulse {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 1; }
-    }
+    @keyframes bgPulse { 0%,100% { opacity: 0.8; } 50% { opacity: 1; } }
     body > * { position: relative; z-index: 1; }
-
     header::after {
       content: '';
       position: absolute; left: 0; right: 0; bottom: -1px;
@@ -61,11 +55,7 @@
       opacity: 0.6;
       animation: scanLine 4s linear infinite;
     }
-    @keyframes scanLine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
+    @keyframes scanLine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
     header {
       display: flex; justify-content: space-between; align-items: center;
       padding: 8px 16px;
@@ -83,19 +73,15 @@
       animation: logoGlow 3s ease-in-out infinite;
     }
     @keyframes logoGlow {
-      0%, 100% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.6); }
+      0%,100% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.6); }
       50% { text-shadow: 0 0 18px rgba(0, 212, 255, 1), 0 0 30px rgba(0, 212, 255, 0.5); }
     }
     .logo-img {
-      height: 28px; width: 28px;
-      object-fit: contain;
+      height: 28px; width: 28px; object-fit: contain;
       filter: drop-shadow(0 0 4px rgba(0, 212, 255, 0.6));
       animation: logoSpin 12s linear infinite;
     }
-    @keyframes logoSpin {
-      0%, 90%, 100% { transform: rotate(0deg); }
-      95% { transform: rotate(15deg); }
-    }
+    @keyframes logoSpin { 0%,90%,100% { transform: rotate(0deg); } 95% { transform: rotate(15deg); } }
     .logo span { color: #fff; }
     .header-right { display: flex; align-items: center; gap: 10px; }
     .status {
@@ -112,7 +98,6 @@
     .status.online .dot { background: var(--neko-green); animation: none; box-shadow: 0 0 8px var(--neko-green); }
     .status.offline .dot { background: var(--neko-red); animation: none; }
     @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
-
     .icon-btn {
       background: transparent; border: 1px solid var(--neko-border);
       color: var(--neko-text); padding: 4px 10px; cursor: pointer;
@@ -121,9 +106,7 @@
     }
     .icon-btn:hover { border-color: var(--neko-accent-dim); color: var(--neko-accent); box-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
     .icon-btn.muted { color: var(--neko-red); border-color: var(--neko-red); }
-
     .main { flex: 1; display: flex; overflow: hidden; }
-
     #sidebar {
       width: 200px; flex-shrink: 0;
       background: var(--neko-panel);
@@ -151,16 +134,8 @@
       transition: all 0.2s;
       position: relative;
     }
-    .conv:hover {
-      background: rgba(0, 212, 255, 0.08);
-      border-left-color: rgba(0, 212, 255, 0.5);
-      padding-left: 16px;
-    }
-    .conv.active {
-      background: rgba(0, 212, 255, 0.12);
-      border-left-color: var(--neko-accent);
-      box-shadow: inset 0 0 12px rgba(0, 212, 255, 0.1);
-    }
+    .conv:hover { background: rgba(0, 212, 255, 0.08); border-left-color: rgba(0, 212, 255, 0.5); padding-left: 16px; }
+    .conv.active { background: rgba(0, 212, 255, 0.12); border-left-color: var(--neko-accent); box-shadow: inset 0 0 12px rgba(0, 212, 255, 0.1); }
     .conv .name { color: var(--neko-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .conv.active .name { color: var(--neko-accent); font-weight: bold; }
     .conv .badge {
@@ -170,35 +145,21 @@
       animation: badgePulse 1.5s ease-in-out infinite;
     }
     @keyframes badgePulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 74, 106, 0.5); }
+      0%,100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 74, 106, 0.5); }
       50% { transform: scale(1.1); box-shadow: 0 0 8px rgba(255, 74, 106, 0.8); }
     }
     .conv .type-icon { font-size: 0.8em; opacity: 0.6; margin-right: 4px; }
     .conv .muted-icon { opacity: 0.4; font-size: 0.75em; }
-
-    #log {
-      flex: 1; overflow-y: auto; padding: 10px 16px;
-      line-height: 1.5; user-select: text;
-    }
-    .msg {
-      margin: 1px 0; word-wrap: break-word; padding: 2px 4px; border-radius: 2px;
-      animation: msgIn 0.25s ease-out;
-    }
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateX(-6px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+    #log { flex: 1; overflow-y: auto; padding: 10px 16px; line-height: 1.5; user-select: text; }
+    .msg { margin: 1px 0; word-wrap: break-word; padding: 2px 4px; border-radius: 2px; animation: msgIn 0.25s ease-out; }
+    @keyframes msgIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
     .msg .time { color: #3a4a6a; font-size: 0.8em; margin-right: 6px; }
     .msg .nick { font-weight: bold; cursor: pointer; }
     .msg .nick:hover { text-decoration: underline; }
     .msg .text { color: var(--neko-text); }
     .msg.system { color: #5a6a8a; font-style: italic; }
     .msg.error { color: var(--neko-red); animation: msgIn 0.25s ease-out, shake 0.4s ease-in-out; }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
-    }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
     .msg.welcome {
       color: var(--neko-accent);
       background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), transparent);
@@ -209,23 +170,15 @@
     .msg.join { color: var(--neko-accent-dim); }
     .msg.part { color: var(--neko-yellow); }
     .msg.action { color: var(--neko-yellow); font-style: italic; }
-    .msg.dm {
-      background: rgba(255, 107, 157, 0.08);
-      border-left: 2px solid var(--neko-pink);
-      padding-left: 6px;
-    }
+    .msg.dm { background: rgba(255, 107, 157, 0.08); border-left: 2px solid var(--neko-pink); padding-left: 6px; }
     .msg.highlight {
       background: rgba(255, 204, 0, 0.15);
       border-left: 3px solid var(--neko-yellow);
       padding-left: 6px;
       animation: msgIn 0.25s ease-out, highlightPulse 2s ease-in-out infinite;
     }
-    @keyframes highlightPulse {
-      0%, 100% { background: rgba(255, 204, 0, 0.15); }
-      50% { background: rgba(255, 204, 0, 0.28); }
-    }
+    @keyframes highlightPulse { 0%,100% { background: rgba(255,204,0,0.15); } 50% { background: rgba(255,204,0,0.28); } }
     .msg.notice { color: var(--neko-blue); }
-
     #users-panel {
       width: 180px; flex-shrink: 0;
       background: var(--neko-panel);
@@ -239,19 +192,12 @@
       background: var(--neko-panel-2);
     }
     #users-list { flex: 1; overflow-y: auto; padding: 6px 0; font-size: 0.85em; }
-    .user {
-      padding: 3px 12px; display: flex; align-items: center; gap: 6px; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .user:hover {
-      background: rgba(0, 212, 255, 0.08);
-      padding-left: 16px;
-    }
+    .user { padding: 3px 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
+    .user:hover { background: rgba(0, 212, 255, 0.08); padding-left: 16px; }
     .user .prefix { color: var(--neko-yellow); font-weight: bold; width: 12px; }
     .user .name { color: var(--neko-text); }
     .user.op .name { color: var(--neko-accent); font-weight: bold; }
     .user.me .name { color: var(--neko-blue); }
-
     #input-area {
       display: flex; gap: 8px; padding: 8px 12px;
       background: var(--neko-panel);
@@ -265,10 +211,7 @@
       transition: all 0.2s;
       caret-color: var(--neko-accent);
     }
-    #input:focus {
-      border-color: var(--neko-accent-dim);
-      box-shadow: 0 0 12px rgba(0, 212, 255, 0.3), inset 0 0 8px rgba(0, 212, 255, 0.05);
-    }
+    #input:focus { border-color: var(--neko-accent-dim); box-shadow: 0 0 12px rgba(0,212,255,0.3), inset 0 0 8px rgba(0,212,255,0.05); }
     #input::placeholder { color: #2a3a5a; }
     button.send-btn {
       background: var(--neko-accent-dim); color: #000;
@@ -278,31 +221,21 @@
       position: relative;
       overflow: hidden;
     }
-    button.send-btn:hover {
-      background: var(--neko-accent);
-      box-shadow: 0 0 16px rgba(0, 212, 255, 0.6);
-      transform: translateY(-1px);
-    }
+    button.send-btn:hover { background: var(--neko-accent); box-shadow: 0 0 16px rgba(0,212,255,0.6); transform: translateY(-1px); }
     button.send-btn:active { transform: translateY(0); }
     button.send-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
-
     .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
       transform: scale(0);
       animation: rippleAnim 0.6s linear;
       pointer-events: none;
     }
-    @keyframes rippleAnim {
-      to { transform: scale(4); opacity: 0; }
-    }
-
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--neko-bg); }
     ::-webkit-scrollbar-thumb { background: var(--neko-border); border-radius: 4px; transition: background 0.2s; }
     ::-webkit-scrollbar-thumb:hover { background: var(--neko-accent-dim); }
-
     #modal {
       position: fixed; inset: 0; background: rgba(0,0,0,0.85);
       display: none; align-items: center; justify-content: center;
@@ -313,22 +246,12 @@
     .modal-box {
       background: var(--neko-panel); border: 1px solid var(--neko-accent-dim);
       padding: 24px; border-radius: 4px; min-width: 360px; max-width: 480px;
-      box-shadow: 0 0 40px rgba(0, 212, 255, 0.25);
-      animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 40px rgba(0,212,255,0.25);
+      animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
-    @keyframes modalIn {
-      from { opacity: 0; transform: scale(0.9) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .modal-box h2 {
-      color: var(--neko-accent); margin-bottom: 4px; font-size: 1.2em;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-    }
-    .modal-box .subtitle {
-      color: var(--neko-accent-dim); font-size: 0.8em; margin-bottom: 20px;
-      letter-spacing: 1px;
-    }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-box h2 { color: var(--neko-accent); margin-bottom: 4px; font-size: 1.2em; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
+    .modal-box .subtitle { color: var(--neko-accent-dim); font-size: 0.8em; margin-bottom: 20px; letter-spacing: 1px; }
     .modal-box h3 { color: var(--neko-accent); margin-bottom: 12px; font-size: 1em; }
     .modal-box label {
       display: block; font-size: 0.78em; color: var(--neko-accent-dim);
@@ -353,12 +276,8 @@
     .modal-box button:hover { background: var(--neko-accent); box-shadow: 0 0 12px rgba(0,212,255,0.5); }
     .modal-box button.cancel { background: transparent; color: var(--neko-text); border: 1px solid var(--neko-border); }
     .modal-box button.cancel:hover { border-color: var(--neko-accent-dim); color: var(--neko-accent); box-shadow: none; }
-    .modal-box .checkbox-row {
-      display: flex; align-items: center; gap: 8px; margin-top: 12px;
-      font-size: 0.85em;
-    }
+    .modal-box .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.85em; }
     .modal-box .checkbox-row input { width: auto; }
-
     #context-menu {
       position: fixed;
       background: var(--neko-panel);
@@ -373,10 +292,7 @@
       user-select: none;
     }
     #context-menu.show { display: block; animation: ctxIn 0.15s ease-out; }
-    @keyframes ctxIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    @keyframes ctxIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     #context-menu .ctx-title {
       padding: 6px 14px 4px;
       color: var(--neko-accent-dim);
@@ -394,13 +310,9 @@
       color: var(--neko-text);
       transition: all 0.15s;
     }
-    #context-menu .ctx-item:hover {
-      background: rgba(0, 212, 255, 0.12);
-      color: var(--neko-accent);
-      padding-left: 18px;
-    }
+    #context-menu .ctx-item:hover { background: rgba(0,212,255,0.12); color: var(--neko-accent); padding-left: 18px; }
     #context-menu .ctx-item.danger { color: var(--neko-red); }
-    #context-menu .ctx-item.danger:hover { background: rgba(255, 74, 106, 0.15); color: #fff; }
+    #context-menu .ctx-item.danger:hover { background: rgba(255,74,106,0.15); color: #fff; }
     #context-menu .ctx-item .icon { width: 14px; text-align: center; opacity: 0.7; }
     #context-menu .ctx-sep { height: 1px; background: var(--neko-border); margin: 4px 8px; }
   </style>
@@ -476,10 +388,6 @@
 
   <script>
     // ========== KONFIGURACE ==========
-    // ⚠️ ZMĚŇTE TOTO NA URL VAŠEHO RENDER BACKENDU!
-    // Například: 'wss://nekoirc-backend.onrender.com'
-    const RENDER_URL = 'wss://nekoirc-backend.onrender.com';
-
     const CONFIG = {
       defaultChannel: '#nekosec',
       delays: { afterOpen: 300, afterNick: 400, afterUser: 600, afterJoin: 800 }
@@ -1096,13 +1004,14 @@
     }
 
     function initWebSocket() {
-      // Zobrazit "Probouzím server..." pokud se připojení déle nedaří
       setStatus('', 'Probouzím server...');
       const wakeTimer = setTimeout(() => {
         if (!state.connected) setStatus('', 'Server se probouzí, čekejte...');
       }, 5000);
 
-      ws = new WebSocket(RENDER_URL);
+      // Připojení na stejnou doménu, na které běží web
+      const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+      ws = new WebSocket(`${protocol}://${location.host}`);
 
       ws.onopen = () => {
         clearTimeout(wakeTimer);
